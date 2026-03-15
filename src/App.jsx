@@ -10,18 +10,22 @@ function App() {
 
   const fetchWeatherData = async (cityName) => {
     if (!cityName) return;
+    setLoading(true);
     setError(null);
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric`,
       );
+      if (!response.ok) {
+        throw new Error("invalid city");
+      }
       const data = await response.json();
       setWeatherData(data);
-      setLoading(false);
     } catch (err) {
       console.error(err);
       setError(err.message);
       setWeatherData(null);
+    } finally {
       setLoading(false);
     }
   };
@@ -92,6 +96,7 @@ function App() {
           <button type="submit">Get</button>
         </form>
 
+        {loading && <div className="loading">Loading...</div>}
         {error && <div className="error">{error}</div>}
 
         {!loading && weatherData && (
@@ -100,15 +105,15 @@ function App() {
             <h2 className="container_city">{weatherData.name}</h2>
             <img
               className="container_img"
-              src={getWeatherIconUrl(weatherData.weather[0].main)}
+              src={getWeatherIconUrl(weatherData.weather?.[0]?.main)}
               width="180px"
               alt="Weather Icon"
             />
             <h2 className="container_degree">
-              {Math.round(weatherData.main.temp)}°C
+              {Math.round(weatherData.main?.temp)}°C
             </h2>
             <h2 className="country_per">
-              {weatherData.weather[0].main}
+              {weatherData.weather?.[0]?.main}
               <span className="degree_icon"></span>
             </h2>
           </div>
@@ -119,3 +124,4 @@ function App() {
 }
 
 export default App;
+

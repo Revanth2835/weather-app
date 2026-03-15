@@ -72,12 +72,21 @@ button:active {
 }
 
 .loading, .error {
-  margin-top: 20px;
+  margin: 32px 0;
   font-size: 18px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.loading {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .error {
   color: #ff6b6b;
+  padding: 12px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 12px;
 }
 
 .weather_data {
