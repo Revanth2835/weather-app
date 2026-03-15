@@ -4,27 +4,24 @@ import "./App.css";
 function App() {
   const [city, setCity] = useState("Chittoor");
   const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const API_KEY = "e3ac13e008c19f60d718f326ddc7d055";
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const API_KEY = "7e201dfc7b756f19415ccd90022de7f3";
 
   const fetchWeatherData = async (cityName) => {
     if (!cityName) return;
-    setLoading(true);
     setError(null);
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric`,
       );
-      if (!response.ok) {
-        throw new Error("City not found");
-      }
       const data = await response.json();
       setWeatherData(data);
+      setLoading(false);
     } catch (err) {
       console.error(err);
+      setError(err.message);
       setWeatherData(null);
-    } finally {
       setLoading(false);
     }
   };
@@ -95,7 +92,6 @@ function App() {
           <button type="submit">Get</button>
         </form>
 
-        {loading && <div className="loading">Loading...</div>}
         {error && <div className="error">{error}</div>}
 
         {!loading && weatherData && (
